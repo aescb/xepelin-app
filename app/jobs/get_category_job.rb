@@ -7,8 +7,21 @@ class GetCategoryJob < ApplicationJob
     blog_request = BlogRequest.find(blog_request_id)
     category = retrieve_category(blog_request.category)
     # response = Services::CloudFunctionService.api_request(category)
-    response = RestClient.send(:get, "https://us-central1-third-octagon-429617-s2.cloudfunctions.net/xepelin-public-cloud-function?category=#{category}")
-    data = JSON.parse(response).with_indifferent_access[:result]
+    if category == 'all'
+      all_categories = [
+        'pymes',
+        'xepelin',
+        'corporatives',
+        'financial_education',
+        'entrepreneurs',
+        'success_cases'
+      ]
+      data = all_categories.map do |cat|
+        ask_category_to_scrapper(retrieve_category(cat))
+      end.flatten
+    else
+      data = ask_category_to_scrapper(category)
+    end
     csv = build_csv(data)
     RestClient.send(:post, blog_request.webhook_url, {
       email: 'agustinescobar.a001@gmail.com',
@@ -19,6 +32,11 @@ class GetCategoryJob < ApplicationJob
   end
 
   private
+
+  def ask_category_to_scrapper(category)
+    response = RestClient.send(:get, "https://us-central1-third-octagon-429617-s2.cloudfunctions.net/xepelin-public-cloud-function?category=#{category}")
+    JSON.parse(response).with_indifferent_access[:result]
+  end
 
   def retrieve_category(cat)
     case cat
@@ -31,11 +49,11 @@ class GetCategoryJob < ApplicationJob
     when 'corporatives'
       'Corporativos'
     when 'financial_education'
-      'Educacion'
+      'Educacion Financiera'
     when 'entrepreneurs'
       'Emprendedores'
     when 'success_cases'
-      'Casos'
+      'Casos de exito'
     end
   end
 
