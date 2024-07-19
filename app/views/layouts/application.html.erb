@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TestApp</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application" %>
+  </head>
+
+  <body>
+    <% if alert %>
+      <p
+        id='alert'
+        class="alert"
+        style='position: absolute; right: 0; background-color: white; padding: 15px; border-radius: 10px; margin: 10px;'
+      >
+        <%= alert %>
+        <a id='close-alert' style='margin-left: 10px; cursor: pointer; font-size: 0.9rem; text-decoration: underline;'>
+          Cerrar
+        </a>
+      </p>
+    <% end %>
+    <%= yield %>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+version: '3.5'
+services:
+  rails:
+    container_name: test-app
+    build:
+      context: ..
+      dockerfile: .docker/prod.Dockerfile
+    volumes:
+      - ../.:/app
+      - railsgems:/usr/local/bundle
+    environment:
+      - POSTGRES_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres/$POSTGRES_DB
+      - REDIS_URL=redis://redis:6379/12
+      - FRONT_URL
+      - HOST_URL
+      - LETTER_OPENER=true
+      - LAUNCHY_DRY_RUN=true
+      - BROWSER=/dev/null
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+      - redis
+    tty: true
+    stdin_open: true
+
+  postgres:
+    container_name: test-app-postgres
+    image: postgres:13
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_DB=$POSTGRES_DB
+
+  redis:
+    container_name: clerical-redis
+    image: redis:5
+
+volumes:
+  postgresdata:
+  railsgems:

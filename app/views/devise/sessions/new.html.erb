@@ -1,0 +1,32 @@
+<div style="background-color: #4E64ED; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center;">
+  <div style='background-color: white; width: 40%; height: 60%; border-radius: 10px; display: flex; justify-content: center; align-items: center; flex-direction: column;'>
+    <h2 style='margin-bottom: 15px;'>
+      Inicio sesión
+    </h2>
+
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { style: 'width: 50%' }) do |f| %>
+      <div class="field" style='margin-bottom: 10px; width: 100%;'>
+        <%= f.email_field :email, {
+          autofocus: true,
+          autocomplete: "email",
+          placeholder: 'Email',
+          style: 'padding: 10px; border-radius: 5px; width: 100%'
+        } %>
+      </div>
+
+      <div class="field" style='margin-bottom: 10px; width: 100%;'>
+        <%= f.password_field :password, {
+          autocomplete: "current-password",
+          placeholder: 'Contraseña',
+          style: 'padding: 10px; border-radius: 5px; width: 100%'
+        } %>
+      </div>
+
+      <div class="actions" style='width: 100%'>
+        <%=f.submit "Iniciar sesión", {
+          style: 'background-color: #4E64ED; border-radius: 10px; width: calc(100% + 20px + 4px); border-width: 0; color: white; padding: 10px;'
+        } %>
+      </div>
+    <% end %>
+  </div>
+</div>
